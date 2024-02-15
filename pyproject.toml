@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lullu-util"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["최병욱 <esc5221@gmail.com>"]
 readme = "README.md"

@@ -84,16 +84,34 @@ def list():
     """
     tmp_file_dir = f"/tmp/lullu_util/job_iterator/"
     if os.path.exists(tmp_file_dir):
-        job_counts = defaultdict(int)
+        job_info: dict[str, (int, int)] = defaultdict(lambda: (0, 0))
         for root, dirs, files in os.walk(tmp_file_dir):
             for _dir in dirs:
                 job_dir = os.path.join(root, _dir)
-                count = len(
-                    [file for file in os.listdir(job_dir) if file.endswith(".txt")]
-                )
-                job_counts[_dir] += count
-        for job, count in job_counts.items():
-            rich.print(f"- {job}: {count}")
+
+                # count .txt files with "done" or "processing" status
+                def count_files_with_status(status):
+                    return len(
+                        [
+                            f
+                            for f in os.listdir(job_dir)
+                            if os.path.isfile(os.path.join(job_dir, f))
+                            and open(os.path.join(job_dir, f)).read().strip() == status
+                        ]
+                    )
+
+                done_count = count_files_with_status("done")
+                processing_count = count_files_with_status("processing")
+                job_info[_dir] = (done_count, processing_count)
+
+        for job, (done_count, processing_count) in job_info.items():
+            total_count = done_count + processing_count
+            rich.print(f"* {job}")
+            rich.print(
+                f"  - {total_count} ({done_count} done, {processing_count} processing)"
+            )
+            rich.print("")
+
     else:
         rich.print("No jobs found.")
 
