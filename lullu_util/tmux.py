@@ -49,6 +49,7 @@ class TmuxSession:
                 session_name=session_name, kill_session=True
             )
             self.target_sessions.append(session)
+            time.sleep(0.2)
             session.windows[0].attached_pane.send_keys(self.cmd)
 
     def logs(self, log_all=False):

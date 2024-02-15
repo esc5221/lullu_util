@@ -61,6 +61,8 @@ def job_iterator(
                 status = f.read()
                 if status.strip() == "done":
                     continue
+                elif status.strip() == "processing":
+                    continue
                 else:
                     rich.print(f"continue processing {job_name} with {_id}")
 
